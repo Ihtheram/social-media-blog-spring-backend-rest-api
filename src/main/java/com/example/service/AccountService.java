@@ -12,14 +12,10 @@ import com.example.repository.AccountRepository;
 
 @Service
 public class AccountService {
+    
     @Autowired
-    AccountRepository accountRepository;
-
-    
-    // public AccountService(AccountRepository accountRepository){
-    //     this.accountRepository = accountRepository;
-    // }
-    
+    private AccountRepository accountRepository;
+  
     @Transactional
     public Account registerAccount(Account account){
 
@@ -27,8 +23,7 @@ public class AccountService {
     }
 
     public Account logIntoAccount(String username, String password){
-        //findById returns a type Optional<Grocery>. This helps the developer avoid null pointer
-        //exceptions. We can use the method .get() to convert an Optional<Grocery> to Grocery.
+
         return accountRepository.login(username, password);
     }
 }
