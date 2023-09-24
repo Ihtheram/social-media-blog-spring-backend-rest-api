@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,12 +39,38 @@ public class SocialMediaController {
     private MessageService messageService;
 
     /*
+     * ACCOUNT REGISTRATION
+     * 
+     * Endpoint: GET localhost:8080/register
+     * Request Body: A JSON of Account(username, password), does not contain account_id
+     * 
+     * Success if username -> not blank, password > 3 characters, username -> not existing in database
+     * The new account will be persisted to the database and
+     * Response body: JSON of the Account including its account_id.
+     * Response status: 200 (Ok) if successful, 409 (Conflict) if username already exists, 400 (Client error) for any other reasons of unsuccessful registration.
+     */
+    @PostMapping("/register")
+    public ResponseEntity<Account> register(@RequestBody Account credentials){
+
+        Account account = accountService.registerAccount(credentials);
+        HttpStatus status = HttpStatus.OK; 
+
+        if(account.getUsername() == "Client error"){
+            status = HttpStatus.BAD_REQUEST;
+        }
+        else if(account.getUsername() == "Conflict"){
+            status = HttpStatus.CONFLICT;
+        }
+        return ResponseEntity.status(status).body(account);
+    }
+
+    /*
      * GET ALL MESSAGES
      * 
      * Endpoint: GET localhost:8080/messages.
      * 
      * Response body: JSON of a list containing all messages retrieved from the database or Empty list if there are no messages.
-     * Response body: Always 200, which is the default.
+     * Response status: Always 200, which is the default.
      */
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getAllMessages() {
@@ -54,26 +81,17 @@ public class SocialMediaController {
 
 
 
-    
-    @PostMapping("register")
-    public ResponseEntity<Account> register(
-        @RequestParam String username, @RequestParam String password){
 
-            AccountService accountService = new AccountService();
-            Account account = accountService.registerAccount(new Account(username, password));
 
-            return ResponseEntity.status(HttpStatus.OK).body(account);
-    }
+    // @GetMapping("/login")
+    // public ResponseEntity<Account> login(
+    //     @RequestParam String username, @RequestParam String password){
 
-    @GetMapping("/login")
-    public ResponseEntity<Account> login(
-        @RequestParam String username, @RequestParam String password){
+    //         AccountService accountService = new AccountService();
+    //         Account account = accountService.logIntoAccount(username, password);
 
-            AccountService accountService = new AccountService();
-            Account account = accountService.logIntoAccount(username, password);
-
-            return ResponseEntity.status(HttpStatus.OK).body(account);
-    }
+    //         return ResponseEntity.status(HttpStatus.OK).body(account);
+    // }
 
 
 
