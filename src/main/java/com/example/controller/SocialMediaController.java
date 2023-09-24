@@ -1,20 +1,13 @@
 package com.example.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
@@ -22,7 +15,7 @@ import com.example.entity.Message;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
-
+import javafx.util.Pair;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -42,26 +35,36 @@ public class SocialMediaController {
      * ACCOUNT REGISTRATION
      * 
      * Endpoint: GET localhost:8080/register
-     * Request Body: A JSON of Account(username, password), does not contain account_id
+     * Request Body: A JSON of an Account(username, password), does not contain account_id
      * 
-     * Success if username -> not blank, password > 3 characters, username -> not existing in database
-     * The new account will be persisted to the database and
+     * Conditions-> requested username -> not blank & not existing in database, password length > 3 characters
+     * Persist to Database: The new account, if conditions met
      * Response body: JSON of the Account including its account_id.
      * Response status: 200 (Ok) if successful, 409 (Conflict) if username already exists, 400 (Client error) for any other reasons of unsuccessful registration.
      */
     @PostMapping("/register")
     public ResponseEntity<Account> register(@RequestBody Account credentials){
 
-        Account account = accountService.registerAccount(credentials);
-        HttpStatus status = HttpStatus.OK; 
+        Pair<Integer, Account> accService = accountService.registerAccount(credentials);
+        return ResponseEntity.status(accService.getKey()).body(accService.getValue());
+    }
 
-        if(account.getUsername() == "Client error"){
-            status = HttpStatus.BAD_REQUEST;
-        }
-        else if(account.getUsername() == "Conflict"){
-            status = HttpStatus.CONFLICT;
-        }
-        return ResponseEntity.status(status).body(account);
+    /*
+     * ACCOUNT LOGIN
+     * Endpoint: POST localhost:8080/login
+     * Request body: A JSON of an Account.
+     * 
+     * Condition-> The requested username and password match an account existing on the database
+     * Response body: JSON of the Account including its account_id.
+     * Response status: 200 (OK) if successful, 401 (Unauthorized) If not successful.
+     */
+    @PostMapping("/login")
+    public ResponseEntity<Account> login(@RequestBody Account credentials){
+
+        Account account = accountService.logIntoAccount(credentials);
+        HttpStatus status = account==null ? HttpStatus.UNAUTHORIZED : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(account);   
     }
 
     /*
@@ -77,23 +80,5 @@ public class SocialMediaController {
         
         return ResponseEntity.status(200).body(messageService.getAllMessages());
     }
-
-
-
-
-
-
-    // @GetMapping("/login")
-    // public ResponseEntity<Account> login(
-    //     @RequestParam String username, @RequestParam String password){
-
-    //         AccountService accountService = new AccountService();
-    //         Account account = accountService.logIntoAccount(username, password);
-
-    //         return ResponseEntity.status(HttpStatus.OK).body(account);
-    // }
-
-
-
     
 }
