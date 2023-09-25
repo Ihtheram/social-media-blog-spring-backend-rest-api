@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -126,4 +127,18 @@ public class SocialMediaController {
         return messageService.deleteMessageById(message_id);
     }
 
+    /**
+     * MESSAGE UPDATE
+     * Endpoint: PATCH localhost:8080/messages.
+     * @RequestBody A JSON of a Message (message_id, message_text), not guaranteed to contain any other information. 
+     * Update on Conditions: requested message id exists in database and message_text>0 & <255 , 
+     * @ResponseBody the number of rows updated (1) or 0 if the message does not exist
+     * @ResponseStatus 200 (OK) if updated, 400 (Client error) otherwise.
+     */
+    @PatchMapping("/messages/{message_id}")
+    public @ResponseBody ResponseEntity<Integer> updateMessage(@RequestBody Message message, @PathVariable int message_id) {
+        Integer rows_updated = messageService.updateMessage(message, message_id);
+        HttpStatus httpstatus = rows_updated == 0 ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
+        return ResponseEntity.status(httpstatus).body(rows_updated);
+    }
 }

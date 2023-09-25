@@ -83,4 +83,28 @@ public class MessageService {
         }
         return rows_updated;    
     }
+
+    /**
+     * MESSAGE UPDATE
+     * @Param newMessage requested Message contains message_text to add to the update
+     * @Param message_id requested id of the message to be modified
+     * Validating -> The requested message id exists in database and message_text>0 & <255 , 
+     * @return the number of rows updated (1) or 0 if the message does not exist
+     */
+    public Integer updateMessage(Message newMessage, int message_id) {
+        List<Message> messages = messageRepository.findAll();
+        Integer rows_updated = 0;
+
+        if (newMessage.getMessage_text().length() > 0 && newMessage.getMessage_text().length() < 255) {
+            for (Message message : messages) {
+                if (message.getMessage_id() == message_id) {
+                    message.setMessage_text(newMessage.getMessage_text());
+                    messageRepository.save(message);
+                    rows_updated++;
+                }
+            }
+        }
+        return rows_updated;
+    }
+    
 }
