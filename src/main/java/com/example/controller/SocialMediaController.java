@@ -46,7 +46,6 @@ public class SocialMediaController {
      */
     @PostMapping("/register")
     public @ResponseBody ResponseEntity<Account> register(@RequestBody Account credentials) {
-
         Pair<Integer, Account> accService = accountService.registerAccount(credentials);
         return ResponseEntity.status(accService.getKey()).body(accService.getValue());
     }
@@ -140,5 +139,18 @@ public class SocialMediaController {
         Integer rows_updated = messageService.updateMessage(message, message_id);
         HttpStatus httpstatus = rows_updated == 0 ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
         return ResponseEntity.status(httpstatus).body(rows_updated);
+    }
+
+    /**
+     * MESSAGE RETRIEVING - ALL MESSAGES BY A USER
+     * Endpoint: GET localhost:8080/accounts/{account_id}/messages.
+     * @PathVariable account_id
+     * @ResponseBody JSON list containing all messages posted by a particular user or Empty list if no message by the user.
+     * @ResponseStatus Always 200 (OK), which is the default.
+     */
+    @GetMapping("/accounts/{account_id}/messages")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody List<Message> getAllMessagesForUser(@PathVariable int account_id) {
+        return messageService.getAllMessagesForUser(account_id);
     }
 }

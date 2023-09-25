@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,4 +108,14 @@ public class MessageService {
         return rows_updated;
     }
     
+    /**
+     * MESSAGE RETRIEVING - ALL MESSAGES BY A USER
+     * @Param account_id
+     * @return `List of Messages Posted By a particular User` if exists, `empty List` otherwise
+     */
+    public List<Message> getAllMessagesForUser(int account_id){
+        List<Integer> ids = new ArrayList<>();
+        ids.add(account_id);
+        return messageRepository.findAllById(ids);    
+    } 
 }

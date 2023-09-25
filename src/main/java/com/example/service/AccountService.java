@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.util.List;
+import javafx.util.Pair;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
-
-import javafx.util.Pair;
 
 @Service
 public class AccountService {
