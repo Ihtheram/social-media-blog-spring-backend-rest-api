@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
@@ -31,35 +33,32 @@ public class SocialMediaController {
     @Autowired
     private MessageService messageService;
 
-    /*
+    /**
      * ACCOUNT REGISTRATION
-     * 
      * Endpoint: GET localhost:8080/register
-     * Request Body: A JSON of an Account(username, password), does not contain account_id
-     * 
-     * Conditions-> requested username -> not blank & not existing in database, password length > 3 characters
-     * Persist to Database: The new account, if conditions met
-     * Response body: JSON of the Account including its account_id.
-     * Response status: 200 (Ok) if successful, 409 (Conflict) if username already exists, 400 (Client error) for any other reasons of unsuccessful registration.
+     * @RequestBody A JSON of an Account(username, password), does not contain account_id
+     * Persist to Database: Conditions-> requested username -> not blank & not existing in database, password length > 3 characters
+     * @ResponseBody JSON of the Account including its account_id.
+     * @ResponseStatus 200 (Ok) if successful, 409 (Conflict) if username already exists, 400 (Client error) for any other reasons of unsuccessful registration.
      */
     @PostMapping("/register")
-    public ResponseEntity<Account> register(@RequestBody Account credentials){
+    public @ResponseBody ResponseEntity<Account> register(@RequestBody Account credentials){
 
         Pair<Integer, Account> accService = accountService.registerAccount(credentials);
         return ResponseEntity.status(accService.getKey()).body(accService.getValue());
     }
 
-    /*
+    /**
      * ACCOUNT LOGIN
      * Endpoint: POST localhost:8080/login
-     * Request body: A JSON of an Account.
+     * @RequestBody A JSON of an Account.
      * 
      * Condition-> The requested username and password match an account existing on the database
-     * Response body: JSON of the Account including its account_id.
-     * Response status: 200 (OK) if successful, 401 (Unauthorized) If not successful.
+     * @ResponseBody JSON of the Account including its account_id.
+     * @ResponseStatus 200 (OK) if successful, 401 (Unauthorized) If not successful.
      */
     @PostMapping("/login")
-    public ResponseEntity<Account> login(@RequestBody Account credentials){
+    public @ResponseBody ResponseEntity<Account> login(@RequestBody Account credentials){
 
         Account account = accountService.logIntoAccount(credentials);
         HttpStatus status = account==null ? HttpStatus.UNAUTHORIZED : HttpStatus.OK;
@@ -67,18 +66,37 @@ public class SocialMediaController {
         return ResponseEntity.status(status).body(account);   
     }
 
-    /*
+    /**
      * GET ALL MESSAGES
-     * 
      * Endpoint: GET localhost:8080/messages.
      * 
-     * Response body: JSON of a list containing all messages retrieved from the database or Empty list if there are no messages.
-     * Response status: Always 200, which is the default.
+     * @ResponseBody JSON of a list containing all messages retrieved from the database or Empty list if there are no messages.
+     * @ResponseStatus Always 200 (OK), which is the default.
      */
     @GetMapping("/messages")
-    public ResponseEntity<List<Message>> getAllMessages() {
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody ResponseEntity<List<Message>> getAllMessages() {
         
         return ResponseEntity.status(200).body(messageService.getAllMessages());
     }
     
+    /**
+     * MESSAGE CREATION
+     * Endpoint: GET localhost:8080/messages
+     * @RequestBody A JSON of an Message (username, password), does not contain message_id. 
+     * Persist on Conditions: requested message_text>0 & <255 posted_by-> a user in database, 
+     * 
+     * @ResponseBody JSON of the Message including its message_id.
+     * @ResponseStatus 200 (Ok) if successful, or 400 (Client error) if unsuccessful.
+     */
+    @PostMapping("/messages")
+    public @ResponseBody ResponseEntity<Message> messageCreation(@RequestBody Message message){
+
+        Message newMessage = messageService.createMessage(message);
+        HttpStatus status = newMessage==null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;  
+
+        return ResponseEntity.status(status).body(newMessage);
+    }
+
+
 }

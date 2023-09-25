@@ -20,9 +20,8 @@ public class AccountService {
     /**
      * ACCOUNT REGISTRATION
      * @Param credentials - requested username and password
-     * Validating-> requested username -> not blank & not existing in database, password length > 3 characters
-     * Persist to Database: The new account, if conditions met
-     * @return A Pair of Integer of status code and Account
+     * Validating-> requested username -> 'not blank' & 'not existing in database', password length > 3 characters
+     * @return A Pair of 'Integer of status code' and 'persisted new Account' if conditions met, 'null' otherwise
      */
     @Transactional
     public Pair<Integer, Account> registerAccount(Account credentials){
