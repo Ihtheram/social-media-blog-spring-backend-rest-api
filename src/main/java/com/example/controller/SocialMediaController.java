@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,16 +100,30 @@ public class SocialMediaController {
     }
 
     /**
-     * MESSAGE RETRIEVING - BY MESSAGE ID
+     * MESSAGE RETRIEVING BY MESSAGE ID
      * Endpoint: GET localhost:8080/messages/{message_id}.
-     * 
+     * @PathVariable message_id
      * @ResponseBody JSON of the message identified by the message_id or Empty list if no message matches by Id.
      * @ResponseStatus Always 200 (OK), which is the default.
      */
     @GetMapping("/messages/{message_id}")
     @ResponseStatus(HttpStatus.OK)
-    public Message getMessageById(@PathVariable int message_id) {
+    public @ResponseBody Message getMessageById(@PathVariable int message_id) {
         return messageService.getMessageById(message_id);
+    }
+
+    /**
+     * MESSAGE DELETION BY MESSAGE ID
+     * Endpoint: DELETE localhost:8080/messages/{message_id}.
+     * @PathVariable message_id
+     * Delete on Condition: Only the requested message only if existed
+     * @ResponseBody the number of rows updated (1) or 0 if the message does not exist
+     * @ResponseStatus Always 200 (OK), which is the default.
+     */
+    @DeleteMapping("/messages/{message_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody Integer deleteMessageById(@PathVariable int message_id) {
+        return messageService.deleteMessageById(message_id);
     }
 
 }

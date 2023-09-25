@@ -48,7 +48,7 @@ public class MessageService {
     }
 
     /**
-     * MESSAGE RETRIEVING - BY MESSAGE ID
+     * MESSAGE RETRIEVING BY MESSAGE ID
      * @Param message_id - requested message id
      * Validating -> The requested message id matches an existing message id in the database
      * @return a message if matched with the given id, null otherwise
@@ -63,5 +63,24 @@ public class MessageService {
         }
         // Message Id does not match with any of the ones in the database
         return null;    
+    }
+
+    /**
+     * MESSAGE DELETION BY MESSAGE ID
+     * @Param message_id - requested message id
+     * Validating -> The requested message id matches an existing message id in the database
+     * @return the number of rows updated (1) or 0 if the message does not exist
+     */
+    public Integer deleteMessageById(int message_id){
+        List<Message> messages = messageRepository.findAll();
+
+        Integer rows_updated = 0;
+        for(Message message : messages) {
+            if(message.getMessage_id() == message_id) {
+                messageRepository.delete(message);
+                rows_updated++;
+            }
+        }
+        return rows_updated;    
     }
 }
