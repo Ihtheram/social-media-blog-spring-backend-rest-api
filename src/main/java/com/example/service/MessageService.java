@@ -47,4 +47,21 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
+    /**
+     * MESSAGE RETRIEVING - BY MESSAGE ID
+     * @Param message_id - requested message id
+     * Validating -> The requested message id matches an existing message id in the database
+     * @return a message if matched with the given id, null otherwise
+     */
+    public Message getMessageById(int message_id){
+        List<Message> messages = messageRepository.findAll();
+
+        for(Message message : messages) {
+            if(message.getMessage_id() == message_id) {
+                return message;
+            }
+        }
+        // Message Id does not match with any of the ones in the database
+        return null;    
+    }
 }

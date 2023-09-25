@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,7 +43,7 @@ public class SocialMediaController {
      * @ResponseStatus 200 (Ok) if successful, 409 (Conflict) if username already exists, 400 (Client error) for any other reasons of unsuccessful registration.
      */
     @PostMapping("/register")
-    public @ResponseBody ResponseEntity<Account> register(@RequestBody Account credentials){
+    public @ResponseBody ResponseEntity<Account> register(@RequestBody Account credentials) {
 
         Pair<Integer, Account> accService = accountService.registerAccount(credentials);
         return ResponseEntity.status(accService.getKey()).body(accService.getValue());
@@ -58,28 +59,14 @@ public class SocialMediaController {
      * @ResponseStatus 200 (OK) if successful, 401 (Unauthorized) If not successful.
      */
     @PostMapping("/login")
-    public @ResponseBody ResponseEntity<Account> login(@RequestBody Account credentials){
+    public @ResponseBody ResponseEntity<Account> login(@RequestBody Account credentials) {
 
         Account account = accountService.logIntoAccount(credentials);
         HttpStatus status = account==null ? HttpStatus.UNAUTHORIZED : HttpStatus.OK;
 
         return ResponseEntity.status(status).body(account);   
     }
-
-    /**
-     * GET ALL MESSAGES
-     * Endpoint: GET localhost:8080/messages.
-     * 
-     * @ResponseBody JSON of a list containing all messages retrieved from the database or Empty list if there are no messages.
-     * @ResponseStatus Always 200 (OK), which is the default.
-     */
-    @GetMapping("/messages")
-    @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody ResponseEntity<List<Message>> getAllMessages() {
-        
-        return ResponseEntity.status(200).body(messageService.getAllMessages());
-    }
-    
+   
     /**
      * MESSAGE CREATION
      * Endpoint: GET localhost:8080/messages
@@ -90,7 +77,7 @@ public class SocialMediaController {
      * @ResponseStatus 200 (Ok) if successful, or 400 (Client error) if unsuccessful.
      */
     @PostMapping("/messages")
-    public @ResponseBody ResponseEntity<Message> messageCreation(@RequestBody Message message){
+    public @ResponseBody ResponseEntity<Message> messageCreation(@RequestBody Message message) {
 
         Message newMessage = messageService.createMessage(message);
         HttpStatus status = newMessage==null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;  
@@ -98,5 +85,30 @@ public class SocialMediaController {
         return ResponseEntity.status(status).body(newMessage);
     }
 
+    /**
+     * MESSAGE RETRIEVING - ALL MESSAGES
+     * Endpoint: GET localhost:8080/messages.
+     * 
+     * @ResponseBody JSON of a list containing all messages retrieved from the database or Empty list if there are no messages.
+     * @ResponseStatus Always 200 (OK), which is the default.
+     */
+    @GetMapping("/messages")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody List<Message> getAllMessages() {
+        return messageService.getAllMessages();
+    }
+
+    /**
+     * MESSAGE RETRIEVING - BY MESSAGE ID
+     * Endpoint: GET localhost:8080/messages/{message_id}.
+     * 
+     * @ResponseBody JSON of the message identified by the message_id or Empty list if no message matches by Id.
+     * @ResponseStatus Always 200 (OK), which is the default.
+     */
+    @GetMapping("/messages/{message_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Message getMessageById(@PathVariable int message_id) {
+        return messageService.getMessageById(message_id);
+    }
 
 }
