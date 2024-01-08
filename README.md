@@ -1,6 +1,6 @@
 # Project: Spring Social media blog API
 
-## Background 
+## Overview
 
 Full-stack applications are typically concerned with both a front end, that displays information to the user and takes in input, and a backend, that manages persisted information.
 
@@ -42,6 +42,13 @@ as well as register a new account or log into an existing account.
 ## Contributors
 - jhigherevature
 - Ihtheram
+
+## License Information
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+https://github.com/Ihtheram/Ihtheram-Spring-Social-Media-Blog-API/tree/main?tab=GPL-3.0-1-ov-file
+
+
 
 ## Database Tables 
 
