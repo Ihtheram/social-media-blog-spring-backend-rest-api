@@ -46,7 +46,7 @@ as well as register a new account or log into an existing account.
 ## License Information
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
-https://github.com/Ihtheram/Ihtheram-Spring-Social-Media-Blog-API/tree/main?tab=GPL-3.0-1-ov-file
+https://github.com/Ihtheram/Ihtheram-Spring-Social-Media-Blog-API/blob/main/LICENSE
 
 
 
