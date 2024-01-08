@@ -4,9 +4,44 @@
 
 Full-stack applications are typically concerned with both a front end, that displays information to the user and takes in input, and a backend, that manages persisted information.
 
-This project will be a backend for a hypothetical social media app, where we must manage our users’ accounts as well as any messages that they submit to the application. However, the functionality for this project will leverage a popular web application framework for Java known as Spring. The Spring framework allows for automatic injection and configuration of many features, including data persitence, endpoints and conventional data manipulation logic (CRUD operations).
+This project will be a backend for a hypothetical social media app, where we must manage our users’ accounts as well as any messages that they submit to the application. However, the functionality for this project will leverage a popular web application framework for Java known as Spring. The Spring framework allows for the automatic injection and configuration of many features, including data persistence, endpoints, and conventional data manipulation logic (CRUD operations).
 
-In our hypothetical micro-blogging or messaging app, any user should be able to see all of the messages posted to the site, or they can see the messages posted by a particular user. In either case, we require a backend which is able to deliver the data needed to display this information as well as process actions like logins, registrations, message creations, message updates, and message deletions.
+In our hypothetical micro-blogging or messaging app, any user should be able to see all of the messages posted to the site, or they can see the messages posted by a particular user. In either case, we require a backend that can deliver the data needed to display this information as well as process actions like logins, registrations, message creations, message updates, and message deletions.
+
+
+## List of Features Implemented
+- User Registration                           - endpoint POST localhost:8080/register
+- User Login                                  - endpoint POST localhost:8080/login
+- Create a new message                        - endpoint POST localhost:8080/messages
+- Retrieve all messages                       - endpoint GET localhost:8080/messages
+- Retrieve a message by message ID            - endpoint GET localhost:8080/messages/{message_id}
+- Delete a message by message ID              - endpoint DELETE localhost:8080/messages/{message_id}
+- Update a message by message ID              - endpoint PATCH localhost:8080/messages
+- Retrieve all messages of a user by user ID  - endpoint GET localhost:8080/accounts/{account_id}/messages
+
+## Technologies used
+- Java
+- Spring Boot
+- Spring Data
+- Spring Framework
+- JDBC
+
+## How to set up / get started using it
+- Download repository
+- Unzip
+- Open with an IDE
+- Install required dependencies
+- Run tests
+- Run on an experimental server or deploy
+- Use the defined endpoints to see the API work
+
+## Usage of the project
+Any user can see all messages, retrieve a particular message by its ID or its author's ID, update or delete a message by its ID,
+as well as register a new account or log into an existing account.
+
+## Contributors
+- jhigherevature
+- Ihtheram
 
 ## Database Tables 
 
